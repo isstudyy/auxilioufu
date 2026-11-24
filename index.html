@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal de Estudos UFU 2027-2 • Concurso Seletivo Vestibular</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Editorial Serif (Playfair Display) & Clean Sans (Plus Jakarta Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ufu: {
+              navy: '#2F4156',
+              teal: '#567C8D',
+              skyblue: '#C8D9E6',
+              beige: '#F5EFEB',
+              white: '#FFFFFF',
+              sage: '#5E8C71',
+              amber: '#C88A3B',
+              lavender: '#6C6EA0',
+              terracotta: '#B84A39',
+              slate: '#475569'
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'editorial': '0 4px 20px -2px rgba(47, 65, 86, 0.06), 0 1px 3px 0 rgba(47, 65, 86, 0.04)',
+            'card-hover': '0 12px 28px -6px rgba(47, 65, 86, 0.12)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #F5EFEB;
+      color: #2F4156;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .editorial-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      letter-spacing: -0.01em;
+    }
+
+    .editorial-kicker {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 0.68rem;
+      font-weight: 700;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F5EFEB;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C8D9E6;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #567C8D;
+    }
+
+    /* Drawer Transitions */
+    .drawer-backdrop {
+      transition: opacity 0.3s ease;
+    }
+    .drawer-panel {
+      transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Subtle fade animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade {
+      animation: fadeIn 0.28s ease forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-ufu-teal selection:text-white">
+
+  <!-- ==================== DRAWER SIDEBAR (MENU 3 RISQUINHOS) ==================== -->
+  <div id="drawerBackdrop" onclick="toggleDrawer(false)" class="fixed inset-0 bg-ufu-navy/40 backdrop-blur-xs z-40 hidden opacity-0 drawer-backdrop"></div>
+  
+  <aside id="navDrawer" class="fixed top-0 left-0 h-full w-80 max-w-[85vw] bg-ufu-navy text-white z-50 -translate-x-full drawer-panel flex flex-col justify-between shadow-2xl">
+    <div>
+      <!-- Drawer Header -->
+      <div class="p-6 border-b border-white/10 flex items-center justify-between">
+        <div>
+          <span class="editorial-kicker text-ufu-skyblue block mb-1">NAVEGAÇÃO</span>
+          <h2 class="editorial-title text-2xl font-bold text-white">UFU 2027-2</h2>
+        </div>
+        <button onclick="toggleDrawer(false)" aria-label="Fechar menu" class="p-2.5 rounded-xl bg-white/10 hover:bg-ufu-teal text-white transition cursor-pointer">
+          <i class="ph ph-x text-xl"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="p-4 space-y-2" id="drawerNavList">
+        <button onclick="switchTab('geral')" data-tab="geral" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-left transition cursor-pointer bg-ufu-teal text-white font-semibold">
+          <i class="ph ph-calendar-blank text-xl"></i>
+          <div>
+            <div class="text-sm leading-tight">Geral & Cronograma</div>
+            <div class="text-[11px] text-ufu-skyblue/80 font-normal">Calendário oficial e metas diárias</div>
+          </div>
+        </button>
+
+        <button onclick="switchTab('redacao')" data-tab="redacao" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-left transition cursor-pointer text-white/85 hover:bg-white/10">
+          <i class="ph ph-pen-nib text-xl"></i>
+          <div>
+            <div class="text-sm leading-tight">Redação</div>
+            <div class="text-[11px] text-ufu-skyblue/80 font-normal">6 gêneros e critérios do edital</div>
+          </div>
+        </button>
+
+        <button onclick="switchTab('conteudos')" data-tab="conteudos" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-left transition cursor-pointer text-white/85 hover:bg-white/10">
+          <i class="ph ph-books text-xl"></i>
+          <div>
+            <div class="text-sm leading-tight">Conteúdos</div>
+            <div class="text-[11px] text-ufu-skyblue/80 font-normal">Resumos e videoaulas por área</div>
+          </div>
+        </button>
+
+        <button onclick="switchTab('progresso')" data-tab="progresso" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-left transition cursor-pointer text-white/85 hover:bg-white/10">
+          <i class="ph ph-check-square-offset text-xl"></i>
+          <div>
+            <div class="text-sm leading-tight">Progresso</div>
+            <div class="text-[11px] text-ufu-skyblue/80 font-normal">Checklist completo de estudos</div>
+          </div>
+        </button>
+
+        <button onclick="switchTab('questoes')" data-tab="questoes" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-left transition cursor-pointer text-white/85 hover:bg-white/10">
+          <i class="ph ph-exam text-xl"></i>
+          <div>
+            <div class="text-sm leading-tight">Questões</div>
+            <div class="text-[11px] text-ufu-skyblue/80 font-normal">Listas de exercícios direcionadas</div>
+          </div>
+        </button>
+
+        <button onclick="switchTab('obras')" data-tab="obras" class="nav-item w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-left transition cursor-pointer text-white/85 hover:bg-white/10">
+          <i class="ph ph-book-open-text text-xl"></i>
+          <div>
+            <div class="text-sm leading-tight">Obras Literárias</div>
+            <div class="text-[11px] text-ufu-skyblue/80 font-normal">5 leituras obrigatórias UFU</div>
+          </div>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="p-5 border-t border-white/10 bg-ufu-navy/80">
+      <div class="flex items-center justify-between text-xs text-ufu-skyblue mb-2">
+        <span>Edital DIRPS Nº 52/2026</span>
+        <span class="font-semibold text-white">04/04/2027</span>
+      </div>
+      <div class="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+        <div id="drawerProgressBar" class="bg-ufu-skyblue h-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+      <p id="drawerProgressText" class="text-[11px] text-white/70 mt-1.5">0% do edital concluído</p>
+    </div>
+  </aside>
+
+  <!-- ==================== FIXED HEADER ==================== -->
+  <header class="sticky top-0 z-30 bg-ufu-white/95 backdrop-blur-md border-b border-ufu-skyblue/70 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Left: Hamburger Button (3 risquinhos) + Platform Title -->
+      <div class="flex items-center gap-3.5">
+        <button onclick="toggleDrawer(true)" aria-label="Abrir menu de abas" class="p-3 rounded-xl bg-ufu-navy text-white hover:bg-ufu-teal transition shadow-xs cursor-pointer flex flex-col justify-center items-center gap-1.5 w-11 h-11 shrink-0 group">
+          <span class="w-5 h-0.5 bg-white rounded-full transition-transform group-hover:translate-x-0.5"></span>
+          <span class="w-5 h-0.5 bg-ufu-skyblue rounded-full"></span>
+          <span class="w-5 h-0.5 bg-white rounded-full transition-transform group-hover:-translate-x-0.5"></span>
+        </button>
+
+        <div>
+          <span class="editorial-kicker text-ufu-teal block leading-none mb-1">CONCURSO SELETIVO VESTIBULAR • DIRPS Nº 52/2026</span>
+          <h1 class="editorial-title text-xl sm:text-2xl font-bold text-ufu-navy leading-tight">Portal de Estudos UFU 2027-2</h1>
+        </div>
+      </div>
+
+      <!-- Right: Real-Time Countdown to 04/04/2027 -->
+      <div class="flex items-center gap-3 bg-ufu-beige border border-ufu-skyblue px-4 py-2 rounded-2xl ml-auto sm:ml-0">
+        <div class="hidden md:flex items-center justify-center w-9 h-9 rounded-xl bg-ufu-navy text-white">
+          <i class="ph ph-hourglass-high text-lg"></i>
+        </div>
+        <div class="text-right sm:text-left">
+          <div class="editorial-kicker text-ufu-teal text-[10px]">PROVA: 04 ABR 2027 • 10H00</div>
+          <div class="flex items-baseline gap-2">
+            <span id="countdownDays" class="editorial-title text-xl sm:text-2xl font-extrabold text-ufu-navy">--</span>
+            <span class="text-xs font-semibold text-ufu-teal uppercase tracking-wider">dias restantes</span>
+            <span id="countdownClock" class="hidden sm:inline-block text-xs font-mono bg-ufu-white px-2 py-0.5 rounded-md border border-ufu-skyblue/60 text-ufu-navy ml-1">--:--:--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Tab Strip (Desktop & Scrollable Mobile) -->
+    <div class="bg-ufu-beige/70 border-t border-ufu-skyblue/40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-1.5 overflow-x-auto py-2 no-scrollbar">
+        <button onclick="switchTab('geral')" data-pill="geral" class="pill-tab px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap bg-ufu-navy text-white">
+          Geral
+        </button>
+        <button onclick="switchTab('redacao')" data-pill="redacao" class="pill-tab px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap text-ufu-navy hover:bg-ufu-skyblue/50">
+          Redação
+        </button>
+        <button onclick="switchTab('conteudos')" data-pill="conteudos" class="pill-tab px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap text-ufu-navy hover:bg-ufu-skyblue/50">
+          Conteúdos
+        </button>
+        <button onclick="switchTab('progresso')" data-pill="progresso" class="pill-tab px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap text-ufu-navy hover:bg-ufu-skyblue/50">
+          Progresso
+        </button>
+        <button onclick="switchTab('questoes')" data-pill="questoes" class="pill-tab px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap text-ufu-navy hover:bg-ufu-skyblue/50">
+          Questões
+        </button>
+        <button onclick="switchTab('obras')" data-pill="obras" class="pill-tab px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap text-ufu-navy hover:bg-ufu-skyblue/50">
+          Obras Literárias
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+    <!-- ===================================================================== -->
+    <!-- ABA 1: GERAL (CALENDÁRIO, CRONOGRAMA DO EDITAL E METAS DE ESTUDO)     -->
+    <!-- ===================================================================== -->
+    <section id="tab-geral" class="tab-section animate-fade space-y-6">
+      
+      <!-- Banner Resumo do Edital -->
+      <div class="bg-ufu-navy text-white rounded-3xl p-6 sm:p-8 shadow-editorial relative overflow-hidden">
+        <div class="absolute -right-12 -top-12 w-56 h-56 rounded-full bg-ufu-teal/25 pointer-events-none"></div>
+        <div class="absolute right-24 -bottom-16 w-40 h-40 rounded-full bg-ufu-skyblue/10 pointer-events-none"></div>
+        
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-7 space-y-2.5">
+            <span class="editorial-kicker text-ufu-skyblue inline-flex items-center gap-2">
+              <i class="ph ph-seal-check text-base"></i> GUIA OFICIAL • VESTIBULAR UFU 2027-2
+            </span>
+            <h2 class="editorial-title text-2xl sm:text-3xl font-bold text-white leading-snug">
+              Planejamento Estratégico até o Dia da Prova
+            </h2>
+            <p class="text-sm text-ufu-skyblue/90 leading-relaxed max-w-2xl">
+              Aplicação única em <strong>04 de abril de 2027</strong>: 1ª Fase Objetiva (65 questões, 1 ponto cada) + 2ª Fase Redação (80 pontos). Acompanhe abaixo as datas oficiais do edital e a trilha diária de conteúdos do básico ao avançado.
+            </p>
+          </div>
+
+          <div class="lg:col-span-5 grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+            <div class="bg-white/10 backdrop-blur-xs rounded-2xl p-3 border border-white/10">
+              <div class="text-[10px] uppercase tracking-wider text-ufu-skyblue">Portões</div>
+              <div class="font-bold text-sm mt-0.5">08h45 – 09h45</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-xs rounded-2xl p-3 border border-white/10">
+              <div class="text-[10px] uppercase tracking-wider text-ufu-skyblue">Início / Sigilo</div>
+              <div class="font-bold text-sm mt-0.5">10h00 / 13h00</div>
+            </div>
+            <div class="bg-white/10 backdrop-blur-xs rounded-2xl p-3 border border-white/10 col-span-2 sm:col-span-1">
+              <div class="text-[10px] uppercase tracking-wider text-ufu-skyblue">Duração / Taxa</div>
+              <div class="font-bold text-sm mt-0.5">5h30 • R$ 117</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Legenda Oficial dos Períodos do Edital -->
+      <div class="bg-ufu-white rounded-3xl p-5 sm:p-6 border border-ufu-skyblue/80 shadow-editorial">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <div>
+            <span class="editorial-kicker text-ufu-teal">CRONOGRAMA DIRPS Nº 52/2026</span>
+            <h3 class="editorial-title text-xl font-bold text-ufu-navy">Datas Oficiais Marcadas no Calendário</h3>
+          </div>
+          <span class="text-xs text-ufu-slate">Clique em qualquer dia do calendário para ver detalhes e metas</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-ufu-beige/60 border border-ufu-skyblue/50">
+            <span class="w-4 h-4 rounded-full mt-0.5 shrink-0 bg-ufu-teal ring-4 ring-ufu-teal/20"></span>
+            <div>
+              <div class="text-xs font-bold text-ufu-navy">Inscrições</div>
+              <div class="text-[11px] text-ufu-slate font-medium">18/01 a 18/02/2027</div>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-ufu-beige/60 border border-ufu-skyblue/50">
+            <span class="w-4 h-4 rounded-full mt-0.5 shrink-0 bg-ufu-sage ring-4 ring-ufu-sage/20"></span>
+            <div>
+              <div class="text-xs font-bold text-ufu-navy">Isenção da Taxa</div>
+              <div class="text-[11px] text-ufu-slate font-medium">18/01 a 28/01/2027</div>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-ufu-beige/60 border border-ufu-skyblue/50">
+            <span class="w-4 h-4 rounded-full mt-0.5 shrink-0 bg-ufu-amber ring-4 ring-ufu-amber/20"></span>
+            <div>
+              <div class="text-xs font-bold text-ufu-navy">Pagamento (R$ 117)</div>
+              <div class="text-[11px] text-ufu-slate font-medium">18/01 a 19/02/2027</div>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-ufu-beige/60 border border-ufu-skyblue/50">
+            <span class="w-4 h-4 rounded-full mt-0.5 shrink-0 bg-ufu-lavender ring-4 ring-ufu-lavender/20"></span>
+            <div>
+              <div class="text-xs font-bold text-ufu-navy">Atendimento Espec.</div>
+              <div class="text-[11px] text-ufu-slate font-medium">18/01 a 18/02/2027</div>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3 p-3 rounded-2xl bg-ufu-terracotta/10 border border-ufu-terracotta/30">
+            <span class="w-4 h-4 rounded-full mt-0.5 shrink-0 bg-ufu-terracotta ring-4 ring-ufu-terracotta/20"></span>
+            <div>
+              <div class="text-xs font-bold text-ufu-terracotta">Aplicação das Provas</div>
+              <div class="text-[11px] text-ufu-navy font-semibold">04/04/2027 (1ª e 2ª Fases)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendário Interativo + Painel Lateral do Dia -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Grade Mensal do Calendário -->
+        <div class="lg:col-span-8 bg-ufu-white rounded-3xl p-5 sm:p-6 border border-ufu-skyblue/80 shadow-editorial">
+          <!-- Month Selector -->
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-ufu-skyblue/50">
+            <div>
+              <span class="editorial-kicker text-ufu-teal">CRONOGRAMA DIÁRIO • BÁSICO AO AVANÇADO</span>
+              <h3 id="calendarMonthTitle" class="editorial-title text-2xl font-bold text-ufu-navy">Novembro 2026</h3>
+            </div>
+
+            <div class="flex items-center gap-1.5 bg-ufu-beige p-1.5 rounded-2xl border border-ufu-skyblue/60">
+              <button onclick="changeMonth(-1)" id="prevMonthBtn" class="p-2 rounded-xl hover:bg-ufu-white text-ufu-navy disabled:opacity-30 transition cursor-pointer" title="Mês anterior">
+                <i class="ph ph-caret-left text-lg font-bold"></i>
+              </button>
+              <select id="monthSelect" onchange="selectMonthIndex(this.value)" class="bg-transparent text-xs font-bold text-ufu-navy px-2 py-1 focus:outline-none cursor-pointer">
+                <option value="0">Novembro 2026</option>
+                <option value="1">Dezembro 2026</option>
+                <option value="2">Janeiro 2027</option>
+                <option value="3">Fevereiro 2027</option>
+                <option value="4">Março 2027</option>
+                <option value="5">Abril 2027</option>
+              </select>
+              <button onclick="changeMonth(1)" id="nextMonthBtn" class="p-2 rounded-xl hover:bg-ufu-white text-ufu-navy disabled:opacity-30 transition cursor-pointer" title="Próximo mês">
+                <i class="ph ph-caret-right text-lg font-bold"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Weekdays Header -->
+          <div class="grid grid-cols-7 gap-1.5 text-center mb-2">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ufu-teal py-1">Dom</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ufu-navy py-1">Seg</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ufu-navy py-1">Ter</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ufu-navy py-1">Qua</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ufu-navy py-1">Qui</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ufu-navy py-1">Sex</div>
+            <div class="text-[11px] font-bold uppercase tracking-wider text-ufu-teal py-1">Sáb</div>
+          </div>
+
+          <!-- Calendar Days Grid -->
+          <div id="calendarGrid" class="grid grid-cols-7 gap-1.5 sm:gap-2">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+        <!-- Painel de Detalhes do Dia Selecionado -->
+        <div class="lg:col-span-4 bg-ufu-white rounded-3xl p-6 border border-ufu-skyblue/80 shadow-editorial sticky top-32">
+          <div id="dayDetailPanel" class="space-y-4">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- ABA 2: REDAÇÃO (6 GÊNEROS DO EDITAL + CRITÉRIOS DE AVALIAÇÃO)         -->
+    <!-- ===================================================================== -->
+    <section id="tab-redacao" class="tab-section hidden animate-fade space-y-6">
+      
+      <!-- Header da Aba Redação -->
+      <div class="bg-ufu-white rounded-3xl p-6 sm:p-8 border border-ufu-skyblue/80 shadow-editorial">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <span class="editorial-kicker text-ufu-teal">SEGUNDA FASE • 80 PONTOS (15 A 34 LINHAS)</span>
+            <h2 class="editorial-title text-2xl sm:text-3xl font-bold text-ufu-navy mt-1">Prova de Redação UFU 2027-2</h2>
+            <p class="text-sm text-ufu-slate mt-1 max-w-2xl">
+              Na prova, você escolherá 1 entre 2 situações motivadoras propostas. Domine os 6 gêneros discursivos previstos no item 6.3.2 e os critérios oficiais de correção.
+            </p>
+          </div>
+
+          <!-- Sub-navegação Redação -->
+          <div class="flex bg-ufu-beige p-1.5 rounded-2xl border border-ufu-skyblue/60 self-start">
+            <button onclick="switchRedacaoMode('generos')" id="btnRedacaoGeneros" class="px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer bg-ufu-navy text-white shadow-xs">
+              Gêneros Textuais (6)
+            </button>
+            <button onclick="switchRedacaoMode('criterios')" id="btnRedacaoCriterios" class="px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition cursor-pointer text-ufu-navy hover:bg-ufu-white/60">
+              Critérios & Nota Zero
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODO A: 6 GÊNEROS TEXTUAIS -->
+      <div id="redacaoGenerosView" class="space-y-6">
+        <!-- Botões dos 6 Gêneros -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="generosButtonsGrid">
+          <!-- Populated via JS -->
+        </div>
+
+        <!-- Card Detalhado do Gênero Selecionado -->
+        <div id="generoDetailCard" class="bg-ufu-white rounded-3xl p-6 sm:p-8 border border-ufu-skyblue/80 shadow-editorial">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <!-- MODO B: CRITÉRIOS DE AVALIAÇÃO DO EDITAL -->
+      <div id="redacaoCriteriosView" class="hidden space-y-6">
+        <!-- Alerta Nota Zero -->
+        <div class="bg-ufu-terracotta/10 border border-ufu-terracotta/30 rounded-3xl p-6">
+          <div class="flex items-start gap-3.5">
+            <div class="w-10 h-10 rounded-2xl bg-ufu-terracotta text-white flex items-center justify-center shrink-0 mt-0.5">
+              <i class="ph ph-warning-octagon text-xl"></i>
+            </div>
+            <div>
+              <span class="editorial-kicker text-ufu-terracotta">SUBITEM 6.3.6 (VI) DO EDITAL • ELIMINAÇÃO AUTOMÁTICA</span>
+              <h3 class="editorial-title text-xl font-bold text-ufu-navy mt-0.5">8 Casos de Nota Zero na Redação UFU</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 mt-3 text-sm text-ufu-navy">
+                <div class="flex items-center gap-2"><span class="font-bold text-ufu-terracotta">a)</span> Não atendimento à proposta temática;</div>
+                <div class="flex items-center gap-2"><span class="font-bold text-ufu-terracotta">b)</span> Não atendimento ao gênero solicitado;</div>
+                <div class="flex items-center gap-2"><span class="font-bold text-ufu-terracotta">c)</span> Folha de redação em branco;</div>
+                <div class="flex items-center gap-2"><span class="font-bold text-ufu-terracotta">d)</span> Texto com extensão inferior a 15 linhas;</div>
+                <div class="flex items-center gap-2"><span class="font-bold text-ufu-terracotta">e)</span> Texto integral ou parcialmente em língua estrangeira;</div>
+                <div class="flex items-center gap-2"><span class="font-bold text-ufu-terracotta">f)</span> Discriminação ou violação de direitos fundamentais;</div>
+                <div class="flex items-center gap-2"><span class="font-bold text-ufu-terracotta">g)</span> Cópia total do(s) texto(s) motivador(es);</div>
+                <div class="flex items-center gap-2"><span class="font-bold text-ufu-terracotta">h)</span> Assinaturas, nomes, pseudônimos ou sinais de identificação.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quadro 2: Critérios de Correção -->
+        <div class="bg-ufu-white rounded-3xl p-6 sm:p-8 border border-ufu-skyblue/80 shadow-editorial space-y-5">
+          <div>
+            <span class="editorial-kicker text-ufu-teal">QUADRO 2 DO EDITAL DIRPS Nº 52/2026</span>
+            <h3 class="editorial-title text-2xl font-bold text-ufu-navy">Grade Oficial de Pontuação (Total: 80 Pontos)</h3>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4" id="criteriosEditalContainer">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- ABA 3: CONTEÚDOS (MATEMÁTICA, NATUREZA E HUMANAS COM RESUMOS & AULAS) -->
+    <!-- ===================================================================== -->
+    <section id="tab-conteudos" class="tab-section hidden animate-fade space-y-6">
+      
+      <!-- Seletor de Área Principal -->
+      <div class="bg-ufu-white rounded-3xl p-6 border border-ufu-skyblue/80 shadow-editorial space-y-5">
+        <div>
+          <span class="editorial-kicker text-ufu-teal">TRILHA TEÓRICA & VIDEOAULAS</span>
+          <h2 class="editorial-title text-2xl sm:text-3xl font-bold text-ufu-navy mt-1">Conteúdos Programáticos UFU</h2>
+          <p class="text-sm text-ufu-slate mt-1">Selecione a área do conhecimento e a disciplina para acessar os resumos teóricos e as playlists recomendadas.</p>
+        </div>
+
+        <!-- Botões das 3 Áreas -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button onclick="selectConteudoArea('matematica')" id="areaBtn-matematica" class="area-btn p-4 rounded-2xl border-2 text-left transition cursor-pointer bg-ufu-navy text-white border-ufu-navy shadow-xs">
+            <div class="flex items-center justify-between">
+              <i class="ph ph-function text-2xl"></i>
+              <span class="text-[10px] uppercase tracking-widest opacity-80">7 Tópicos</span>
+            </div>
+            <div class="editorial-title text-lg font-bold mt-2">Matemática</div>
+            <div class="text-xs opacity-80">Prof. Ferretto • Base completa</div>
+          </button>
+
+          <button onclick="selectConteudoArea('natureza')" id="areaBtn-natureza" class="area-btn p-4 rounded-2xl border-2 text-left transition cursor-pointer bg-ufu-beige/60 text-ufu-navy border-ufu-skyblue hover:border-ufu-teal">
+            <div class="flex items-center justify-between">
+              <i class="ph ph-atom text-2xl text-ufu-teal"></i>
+              <span class="text-[10px] uppercase tracking-widest text-ufu-teal">3 Disciplinas</span>
+            </div>
+            <div class="editorial-title text-lg font-bold mt-2">Ciências da Natureza</div>
+            <div class="text-xs text-ufu-slate">Biologia, Física e Química</div>
+          </button>
+
+          <button onclick="selectConteudoArea('humanas')" id="areaBtn-humanas" class="area-btn p-4 rounded-2xl border-2 text-left transition cursor-pointer bg-ufu-beige/60 text-ufu-navy border-ufu-skyblue hover:border-ufu-teal">
+            <div class="flex items-center justify-between">
+              <i class="ph ph-globe-hemisphere-west text-2xl text-ufu-teal"></i>
+              <span class="text-[10px] uppercase tracking-widest text-ufu-teal">4 Disciplinas</span>
+            </div>
+            <div class="editorial-title text-lg font-bold mt-2">Ciências Humanas</div>
+            <div class="text-xs text-ufu-slate">História, Geografia, Filosofia e Sociologia</div>
+          </button>
+        </div>
+
+        <!-- Sub-filtros de Disciplina (quando Natureza ou Humanas estiver ativo) -->
+        <div id="conteudoSubFilters" class="hidden pt-2 border-t border-ufu-skyblue/50 flex flex-wrap gap-2">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <!-- Lista de Conteúdos com Resumos e Videoaulas -->
+      <div id="conteudosListContainer" class="space-y-4">
+        <!-- Populated via JS -->
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- ABA 4: PROGRESSO (CHECKLIST COMPLETO PERSISTENTE)                     -->
+    <!-- ===================================================================== -->
+    <section id="tab-progresso" class="tab-section hidden animate-fade space-y-6">
+      
+      <!-- Painel Geral de Progresso -->
+      <div class="bg-ufu-white rounded-3xl p-6 sm:p-8 border border-ufu-skyblue/80 shadow-editorial">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <span class="editorial-kicker text-ufu-teal">ACOMPANHAMENTO DE ESTUDOS</span>
+            <h2 class="editorial-title text-2xl sm:text-3xl font-bold text-ufu-navy mt-1">Seu Progresso no Edital UFU</h2>
+            <p class="text-sm text-ufu-slate mt-1">Marque os conteúdos e obras literárias já estudados. Seu progresso fica salvo automaticamente neste navegador.</p>
+          </div>
+          <button onclick="resetAllProgress()" class="self-start md:self-center px-4 py-2.5 rounded-xl border border-ufu-terracotta/40 text-ufu-terracotta hover:bg-ufu-terracotta hover:text-white text-xs font-bold uppercase tracking-wider transition cursor-pointer flex items-center gap-2">
+            <i class="ph ph-arrow-counter-clockwise text-base"></i> Reiniciar Checklist
+          </button>
+        </div>
+
+        <!-- Barra Geral -->
+        <div class="bg-ufu-beige rounded-2xl p-5 border border-ufu-skyblue/60">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-bold text-ufu-navy">Progresso Geral Acumulado</span>
+            <span id="overallProgressLabel" class="editorial-title text-xl font-bold text-ufu-teal">0% (0/0)</span>
+          </div>
+          <div class="w-full h-3.5 bg-ufu-white rounded-full overflow-hidden border border-ufu-skyblue/50">
+            <div id="overallProgressBar" class="h-full bg-gradient-to-r from-ufu-navy to-ufu-teal transition-all duration-500 rounded-full" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards de Checklist por Disciplina -->
+      <div id="progressChecklistsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Populated via JS -->
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- ABA 5: QUESTÕES (LISTAS DE EXERCÍCIOS POR ÁREA E DISCIPLINA)          -->
+    <!-- ===================================================================== -->
+    <section id="tab-questoes" class="tab-section hidden animate-fade space-y-6">
+      
+      <div class="bg-ufu-white rounded-3xl p-6 border border-ufu-skyblue/80 shadow-editorial space-y-5">
+        <div>
+          <span class="editorial-kicker text-ufu-teal">TREINO PRÁTICO & FIXAÇÃO</span>
+          <h2 class="editorial-title text-2xl sm:text-3xl font-bold text-ufu-navy mt-1">Banco de Questões Direcionadas</h2>
+          <p class="text-sm text-ufu-slate mt-1">Acesse listas selecionadas de exercícios (Brasil Escola, Toda Matéria e Mundo Educação) organizadas por tópico do edital.</p>
+        </div>
+
+        <!-- Botões das 3 Grandes Áreas -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button onclick="selectQuestoesArea('natureza')" id="qAreaBtn-natureza" class="q-area-btn p-4 rounded-2xl border-2 text-left transition cursor-pointer bg-ufu-navy text-white border-ufu-navy shadow-xs">
+            <div class="flex items-center justify-between">
+              <i class="ph ph-flask text-2xl"></i>
+              <span class="text-[10px] uppercase tracking-widest opacity-80">26 Listas</span>
+            </div>
+            <div class="editorial-title text-lg font-bold mt-2">Ciências da Natureza</div>
+            <div class="text-xs opacity-80">Biologia, Física e Química</div>
+          </button>
+
+          <button onclick="selectQuestoesArea('humanas')" id="qAreaBtn-humanas" class="q-area-btn p-4 rounded-2xl border-2 text-left transition cursor-pointer bg-ufu-beige/60 text-ufu-navy border-ufu-skyblue hover:border-ufu-teal">
+            <div class="flex items-center justify-between">
+              <i class="ph ph-columns text-2xl text-ufu-teal"></i>
+              <span class="text-[10px] uppercase tracking-widest text-ufu-teal">33 Listas</span>
+            </div>
+            <div class="editorial-title text-lg font-bold mt-2">Ciências Humanas</div>
+            <div class="text-xs text-ufu-slate">História, Geografia, Filosofia e Sociologia</div>
+          </button>
+
+          <button onclick="selectQuestoesArea('matematica')" id="qAreaBtn-matematica" class="q-area-btn p-4 rounded-2xl border-2 text-left transition cursor-pointer bg-ufu-beige/60 text-ufu-navy border-ufu-skyblue hover:border-ufu-teal">
+            <div class="flex items-center justify-between">
+              <i class="ph ph-math-operations text-2xl text-ufu-teal"></i>
+              <span class="text-[10px] uppercase tracking-widest text-ufu-teal">7 Listas</span>
+            </div>
+            <div class="editorial-title text-lg font-bold mt-2">Matemática</div>
+            <div class="text-xs text-ufu-slate">Aritmética, Álgebra, Geometria e Mais</div>
+          </button>
+        </div>
+
+        <!-- Sub-filtros de Disciplina em Questões -->
+        <div id="questoesSubFilters" class="pt-2 border-t border-ufu-skyblue/50 flex flex-wrap gap-2">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <!-- Lista de Exercícios -->
+      <div id="questoesListContainer" class="space-y-4">
+        <!-- Populated via JS -->
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- ABA 6: OBRAS LITERÁRIAS (5 LEITURAS OBRIGATÓRIAS UFU)                 -->
+    <!-- ===================================================================== -->
+    <section id="tab-obras" class="tab-section hidden animate-fade space-y-6">
+      
+      <div class="bg-ufu-white rounded-3xl p-6 sm:p-8 border border-ufu-skyblue/80 shadow-editorial">
+        <span class="editorial-kicker text-ufu-teal">LITERATURA • LEITURAS OBRIGATÓRIAS</span>
+        <h2 class="editorial-title text-2xl sm:text-3xl font-bold text-ufu-navy mt-1">Obras Literárias UFU</h2>
+        <p class="text-sm text-ufu-slate mt-1">Clique em cada obra abaixo para ler o resumo crítico e os principais pontos cobrados na prova.</p>
+
+        <!-- 5 Botões das Obras -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mt-6" id="obrasButtonsGrid">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <!-- Card Detalhado da Obra Selecionada -->
+      <div id="obraDetailCard" class="bg-ufu-white rounded-3xl p-6 sm:p-8 border border-ufu-skyblue/80 shadow-editorial">
+        <!-- Populated via JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-ufu-white border-t border-ufu-skyblue/70 py-6 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ufu-slate">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-ufu-navy"></span>
+        <span class="font-semibold text-ufu-navy">Portal de Estudos UFU 2027-2</span>
+        <span>• Baseado no Edital DIRPS Nº 52/2026</span>
+      </div>
+      <div>
+        Prova: <strong class="text-ufu-navy">04/04/2027</strong> • Foco, constância e aprovação!
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification (Substitui alert/confirm) -->
+  <div id="toastBox" class="fixed bottom-5 right-5 z-50 bg-ufu-navy text-white px-5 py-3.5 rounded-2xl shadow-xl border border-ufu-skyblue/30 flex items-center gap-3 translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <i class="ph ph-check-circle text-ufu-skyblue text-xl"></i>
+    <span id="toastMessage" class="text-xs font-semibold">Progresso salvo!</span>
+  </div>
+
+  <!-- ==================== JAVASCRIPT DATA & LOGIC ==================== -->
+  <script>
+    // =========================================================================
+    // 1. CONTAGEM REGRESSIVA ATÉ 04/04/2027 (10:00 HORÁRIO DE BRASÍLIA)
+    // =========================================================================
+    const EXAM_DATE = new Date('2027-04-04T10:00:00-03:00');
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = EXAM_DATE - now;
+
+      const daysEl = document.getElementById('countdownDays');
+      const clockEl = document.getElementById('countdownClock');
+
+      if (diff <= 0) {
+        daysEl.textContent = '0';
+        clockEl.textContent = 'DIA DA PROVA!';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      daysEl.textContent = days;
+      clockEl.textContent = `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // =========================================================================
+    // 2. DADOS DO EDITAL, CALENDÁRIO E TRILHA DE ESTUDOS (NOV/2026 - ABR/2027)
+    // =========================================================================
+    const CALENDAR_MONTHS = [
+      { year: 2026, month: 10, name: 'Novembro 2026' },  // 0
+      { year: 2026, month: 11, name: 'Dezembro 2026' },  // 1
+      { year: 2027, month: 0,  name: 'Janeiro 2027' },   // 2
+      { year: 2027, month: 1,  name: 'Fevereiro 2027' }, // 3
+      { year: 2027, month: 2,  name: 'Março 2027' },     // 4
+      { year: 2027, month: 3,  name: 'Abril 2027' }      // 5
+    ];
+
+    // Eventos Oficiais do Edital DIRPS Nº 52/2026
+    function getEditalEventsForDate(isoDate) {
+      const events = [];
+      // Inscrições: 18/01/2027 a 18/02/2027
+      if (isoDate >= '2027-01-18' && isoDate <= '2027-02-18') {
+        events.push({
+          title: 'Período de Inscrições',
+          period: '18/01 a 18/02/2027',
+          color: 'bg-ufu-teal',
+          badgeClass: 'bg-ufu-teal/15 text-ufu-teal border-ufu-teal/30',
+          desc: 'Inscrições online pelo Portal Seleção UFU (08h de 18/01 até 16h de 18/02).'
+        });
+      }
+      // Isenção da Taxa: 18/01/2027 a 28/01/2027
+      if (isoDate >= '2027-01-18' && isoDate <= '2027-01-28') {
+        events.push({
+          title: 'Solicitação de Isenção da Taxa',
+          period: '18/01 a 28/01/2027',
+          color: 'bg-ufu-sage',
+          badgeClass: 'bg-ufu-sage/15 text-ufu-sage border-ufu-sage/30',
+          desc: 'Para inscritos no CadÚnico ou baixa renda Lei 12.799/2013 (até 16h de 28/01).'
+        });
+      }
+      // Pagamento da Taxa: 18/01/2027 a 19/02/2027
+      if (isoDate >= '2027-01-18' && isoDate <= '2027-02-19') {
+        events.push({
+          title: 'Pagamento da Taxa (R$ 117,00)',
+          period: '18/01 a 19/02/2027',
+          color: 'bg-ufu-amber',
+          badgeClass: 'bg-ufu-amber/15 text-ufu-amber border-ufu-amber/30',
+          desc: 'Quitação via boleto bancário ou QR Code PIX gerado no sistema.'
+        });
+      }
+      // Atendimento Especializado / Específico: 18/01/2027 a 18/02/2027
+      if (isoDate >= '2027-01-18' && isoDate <= '2027-02-18') {
+        events.push({
+          title: 'Atendimento Especializado / Específico',
+          period: '18/01 a 18/02/2027',
+          color: 'bg-ufu-lavender',
+          badgeClass: 'bg-ufu-lavender/15 text-ufu-lavender border-ufu-lavender/30',
+          desc: 'Solicitação de acessibilidade, lactante ou nome social no ato da inscrição.'
+        });
+      }
+      // Marcos extras importantes do edital
+      if (isoDate === '2027-02-12') {
+        events.push({
+          title: 'Resultado da Isenção da Taxa',
+          period: '12/02/2027 (a partir das 11h)',
+          color: 'bg-ufu-sage',
+          badgeClass: 'bg-ufu-sage/15 text-ufu-sage border-ufu-sage/30',
+          desc: 'Consulta no Portal Seleção em <Detalhes da sua Inscrição>.'
+        });
+      }
+      if (isoDate === '2027-02-26') {
+        events.push({
+          title: 'Deferimento das Inscrições e Concorrência',
+          period: '26/02/2027',
+          color: 'bg-ufu-teal',
+          badgeClass: 'bg-ufu-teal/15 text-ufu-teal border-ufu-teal/30',
+          desc: 'Divulgação do deferimento das inscrições e relação candidato/vaga.'
+        });
+      }
+      if (isoDate === '2027-03-25') {
+        events.push({
+          title: 'Liberação da Ficha do(a) Candidato(a)',
+          period: 'A partir de 25/03/2027',
+          color: 'bg-ufu-navy',
+          badgeClass: 'bg-ufu-navy/15 text-ufu-navy border-ufu-navy/30',
+          desc: 'Local de prova, prédio, setor e resultado de atendimento especializado.'
+        });
+      }
+      // Aplicação das Provas: 04/04/2027
+      if (isoDate === '2027-04-04') {
+        events.push({
+          title: 'APLICAÇÃO DAS PROVAS (1ª E 2ª FASES)',
+          period: '04/04/2027 • Início 10h00',
+          color: 'bg-ufu-terracotta',
+          badgeClass: 'bg-ufu-terracotta/15 text-ufu-terracotta border-ufu-terracotta/40',
+          desc: 'Abertura portões 08h45 | Fechamento 09h45 | Prova 10h00 às 15h30 (Objetiva + Redação).'
+        });
+      }
+      return events;
+    }
+
+    // Trilha Progressiva do Básico ao Avançado (24/11/2026 até 03/04/2027)
+    const STUDY_MODULES_POOL = [
+      // Fase 1: Fundamentos e Base (Novembro - Dezembro 2026)
+      { phase: 'Base & Fundamentos', items: ['Matemática - Conjuntos Numéricos, Razão e Proporção', 'Biologia - Citologia e Membrana Plasmática'] },
+      { phase: 'Base & Fundamentos', items: ['Matemática - PA e PG (Progressões)', 'Física - Cinemática e Leis de Newton'] },
+      { phase: 'Base & Fundamentos', items: ['Química - Estrutura Atômica e Modelos', 'História Geral - Antiguidade Oriental e Clássica'] },
+      { phase: 'Base & Fundamentos', items: ['Geografia - Espaço Geográfico e Clima', 'Filosofia - Filosofia Antiga (Sócrates, Platão e Aristóteles)'] },
+      { phase: 'Base & Fundamentos', items: ['Sociologia - Conceitos Sociológicos e Trabalho', 'Redação - Estrutura da Carta de Solicitação'] },
+      { phase: 'Base & Fundamentos', items: ['Matemática - Porcentagem e Juros Simples/Compostos', 'Biologia - Histologia Animal e Vegetal'] },
+      { phase: 'Base & Fundamentos', items: ['Literatura - Uma vida em segredo (Autran Dourado)', 'Gramática - Ortografia, Acentuação e Pontuação'] },
+      { phase: 'Revisão Semanal & Questões', items: ['Simulado de Fixação: Matemática Básica e Natureza', 'Redação - Prática: Carta de Solicitação'] },
+
+      { phase: 'Base & Fundamentos', items: ['Matemática - Funções de 1º e 2º Grau', 'Química - Tabela Periódica e Propriedades'] },
+      { phase: 'Base & Fundamentos', items: ['Física - Trabalho, Potência e Energia', 'História do Brasil - Período Pré-Colonial e Brasil Colônia'] },
+      { phase: 'Base & Fundamentos', items: ['Geografia - Relevo, Geomorfologia e Dinâmica Terrestre', 'Biologia - Ecologia e Cadeias Alimentares'] },
+      { phase: 'Base & Fundamentos', items: ['Filosofia - Filosofia Medieval (Patrística e Escolástica)', 'Sociologia - Estratificação e Desigualdade Social'] },
+      { phase: 'Base & Fundamentos', items: ['Redação - Estrutura da Carta de Reclamação', 'Literatura - Invenção e memória (Lygia Fagundes Telles)'] },
+      { phase: 'Base & Fundamentos', items: ['Matemática - Função Exponencial e Logarítmica', 'Química - Ligações Químicas e Polaridade'] },
+      { phase: 'Revisão Semanal & Questões', items: ['Bateria de Questões: Humanas e Linguagens', 'Redação - Prática: Carta de Reclamação'] },
+
+      // Fase 2: Aprofundamento Intermediário (Janeiro - Fevereiro 2027)
+      { phase: 'Aprofundamento Intermediário', items: ['Matemática - Análise Combinatória e Contagem', 'Biologia - Genética Básica e Leis de Mendel'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Física - Dinâmica Impulsiva e Colisões', 'História Geral - Idade Média e Feudalismo'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Química - Funções Inorgânicas (Ácidos, Bases, Sais e Óxidos)', 'Geografia - Biogeografia e Biomas Brasileiros'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Filosofia - Filosofia Moderna (Racionalismo e Empirismo)', 'Sociologia - Estado, Poder e Dominação (Weber)'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Redação - Estrutura da Carta Aberta', 'Literatura - Coral e outros poemas (Sophia de Mello Breyner)'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Matemática - Probabilidade e Estatística', 'Física - Termometria e Calorimetria'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Biologia - Evolução e Origem da Vida', 'História do Brasil - Período Joanino e Independência'] },
+      { phase: 'Simulado & Revisão', items: ['Simulado Parcial UFU (35 Questões Objetivas)', 'Redação - Prática: Carta Aberta'] },
+
+      { phase: 'Aprofundamento Intermediário', items: ['Matemática - Trigonometria no Triângulo e Círculo', 'Química - Reações Inorgânicas e Balanceamento'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Física - Gases Ideais e Termodinâmica', 'Geografia - Demografia, População e Migrações'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Biologia - Fisiologia Humana (Sistemas Nervoso e Circulatório)', 'História Geral - Idade Moderna e Iluminismo'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Filosofia - Ética e Filosofia Moral (Aristóteles e Kant)', 'Sociologia - Cidadania e Direitos Humanos'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Redação - Estrutura do Artigo de Opinião', 'Literatura - Auto do frade (João Cabral de Melo Neto)'] },
+      { phase: 'Aprofundamento Intermediário', items: ['Matemática - Matrizes, Determinantes e Sistemas Lineares', 'Física - Ondulatória e Efeito Doppler'] },
+      { phase: 'Simulado & Revisão', items: ['Bateria de Questões: Exatas e Ciências da Natureza', 'Redação - Prática: Artigo de Opinião'] },
+
+      // Fase 3: Domínio Avançado e Reta Final (Março - Abril 2027)
+      { phase: 'Nível Avançado', items: ['Matemática - Geometria Plana e Relações Métricas', 'Biologia - Embriogênese e Reprodução Humana'] },
+      { phase: 'Nível Avançado', items: ['Química - Físico-Química: Soluções e Termoquímica', 'História do Brasil - Primeiro Reinado, Regência e Segundo Reinado'] },
+      { phase: 'Nível Avançado', items: ['Física - Óptica Geométrica (Espelhos e Lentes)', 'Geografia - Geografia Econômica, Indústria e Agronegócio'] },
+      { phase: 'Nível Avançado', items: ['Filosofia - Filosofia Política e Contratualistas', 'Sociologia - Movimentos Sociais e Minorias'] },
+      { phase: 'Nível Avançado', items: ['Redação - Estrutura da Resenha Crítica', 'Literatura - O amor acaba (Paulo Mendes Campos)'] },
+      { phase: 'Nível Avançado', items: ['Matemática - Geometria Espacial (Prismas, Cilindros, Pirâmides e Esferas)', 'Química - Cinética, Equilíbrio Químico e Eletroquímica'] },
+      { phase: 'Nível Avançado', items: ['Biologia - Taxonomia (Reinos) e Botânica', 'História Geral - Revoluções Industrial e Francesa (Séc. XVIII-XIX)'] },
+      { phase: 'Simulado Geral UFU', items: ['Simulado Completo UFU (65 Questões + Redação cronometrada)', 'Correção detalhada de erros'] },
+
+      { phase: 'Nível Avançado', items: ['Matemática - Geometria Analítica Plana (Reta e Circunferência)', 'Física - Ondas Eletromagnéticas e Consumo de Energia (kWh)'] },
+      { phase: 'Nível Avançado', items: ['Química - Química Orgânica (Cadeias, Funções e Isomeria)', 'História do Brasil - Primeira República e Era Vargas'] },
+      { phase: 'Nível Avançado', items: ['Geografia - Geografia Urbana e Geopolítica Mundial', 'Filosofia - Filosofia Contemporânea e Questões Raciais'] },
+      { phase: 'Nível Avançado', items: ['Redação - Estrutura do Relato', 'Linguagens - Interpretação de Texto e Língua Estrangeira'] },
+      { phase: 'Nível Avançado', items: ['Matemática - Números Complexos, Polinômios e Equações Algébricas', 'Física - Eletromagnetismo e Indução'] },
+      { phase: 'Nível Avançado', items: ['Química - Reações Orgânicas e Química Ambiental', 'História - Século XX, Ditadura Militar e Nova República'] },
+      { phase: 'Reta Final & Revisão', items: ['Revisão Geral das 5 Obras Literárias UFU', 'Redação - Revisão dos 6 Gêneros e Critérios do Edital'] }
+    ];
+
+    // Mapeia cada dia de 24/11/2026 até 04/04/2027 para uma recomendação específica
+    const START_STUDY_DATE = new Date('2026-11-24T00:00:00');
+    const END_STUDY_DATE   = new Date('2027-04-04T00:00:00');
+
+    function getStudyPlanForDate(isoDate) {
+      if (isoDate === '2027-04-04') {
+        return {
+          phase: 'DIA DA PROVA UFU 2027-2',
+          items: [
+            'Chegar com pelo menos 1h de antecedência (Portões fecham às 09h45)',
+            'Levar documento oficial original com foto, Ficha do Candidato e caneta esferográfica transparente (azul ou preta)'
+          ]
+        };
+      }
+      if (isoDate === '2027-04-03') {
+        return {
+          phase: 'Véspera da Prova',
+          items: [
+            'Revisão leve de fórmulas-chave e estrutura dos 6 gêneros de redação',
+            'Separar documentos, canetas transparentes, lanche sem rótulo e descansar bem'
+          ]
+        };
+      }
+
+      const d = new Date(isoDate + 'T00:00:00');
+      if (d < START_STUDY_DATE || d > END_STUDY_DATE) {
+        return null;
+      }
+
+      // Garante que dia 25/11/2026 mostre exatamente o exemplo pedido: "Matemática - PA e PG"
+      if (isoDate === '2026-11-25') {
+        return {
+          phase: 'Base & Fundamentos',
+          items: ['Matemática - PA e PG (Progressões)', 'Biologia - Citologia e Membrana Plasmática']
+        };
+      }
+
+      const diffDays = Math.floor((d - START_STUDY_DATE) / (1000 * 60 * 60 * 24));
+      const moduleIndex = diffDays % STUDY_MODULES_POOL.length;
+      return STUDY_MODULES_POOL[moduleIndex];
+    }
+
+    // Estado do Calendário
+    let currentMonthIdx = 0; // Inicia em Novembro 2026
+    let selectedDateIso = '2026-11-25'; // Seleciona 25 de Novembro por padrão para ilustrar
+
+    function renderCalendar() {
+      const mObj = CALENDAR_MONTHS[currentMonthIdx];
+      document.getElementById('calendarMonthTitle').textContent = mObj.name;
+      document.getElementById('monthSelect').value = currentMonthIdx;
+      document.getElementById('prevMonthBtn').disabled = (currentMonthIdx === 0);
+      document.getElementById('nextMonthBtn').disabled = (currentMonthIdx === CALENDAR_MONTHS.length - 1);
+
+      const grid = document.getElementById('calendarGrid');
+      grid.innerHTML = '';
+
+      const firstDayOfWeek = new Date(mObj.year, mObj.month, 1).getDay();
+      const daysInMonth = new Date(mObj.year, mObj.month + 1, 0).getDate();
+
+      // Empty cells before day 1
+      for (let i = 0; i < firstDayOfWeek; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'h-16 sm:h-20 rounded-2xl bg-ufu-beige/30';
+        grid.appendChild(empty);
+      }
+
+      const studiedDays = getStudiedDays();
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const iso = `${mObj.year}-${String(mObj.month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const events = getEditalEventsForDate(iso);
+        const plan = getStudyPlanForDate(iso);
+        const isSelected = (iso === selectedDateIso);
+        const isExamDay = (iso === '2027-04-04');
+        const isStudied = studiedDays.includes(iso);
+
+        const cell = document.createElement('button');
+        cell.onclick = () => selectCalendarDay(iso);
+        cell.className = `h-16 sm:h-20 p-1.5 sm:p-2 rounded-2xl border text-left flex flex-col justify-between transition cursor-pointer relative overflow-hidden ${
+          isExamDay
+            ? 'bg-ufu-terracotta text-white border-ufu-terracotta shadow-md ring-2 ring-ufu-terracotta/40'
+            : isSelected
+              ? 'bg-ufu-navy text-white border-ufu-navy shadow-md'
+              : plan
+                ? 'bg-ufu-white hover:bg-ufu-skyblue/25 border-ufu-skyblue/80 text-ufu-navy'
+                : 'bg-ufu-beige/40 border-transparent text-ufu-slate/50'
+        }`;
+
+        // Top row: Day number + studied check
+        let topHtml = `<div class="flex items-center justify-between w-full">
+          <span class="text-xs sm:text-sm font-bold">${day}</span>
+          ${isStudied ? `<i class="ph-fill ph-check-circle text-xs ${isSelected || isExamDay ? 'text-ufu-skyblue' : 'text-ufu-sage'}"></i>` : ''}
+        </div>`;
+
+        // Middle: Tiny preview of study subject on desktop
+        let midHtml = '';
+        if (plan && !isExamDay) {
+          const shortSubject = plan.items[0].split('-')[0].trim();
+          midHtml = `<div class="hidden sm:block text-[9px] leading-tight truncate w-full ${isSelected ? 'text-ufu-skyblue' : 'text-ufu-teal font-medium'}">${shortSubject}</div>`;
+        } else if (isExamDay) {
+          midHtml = `<div class="text-[9px] font-bold uppercase tracking-wider leading-tight">PROVA UFU</div>`;
+        }
+
+        // Bottom: Colored bars for Edital events
+        let dotsHtml = '<div class="flex items-center gap-0.5 w-full mt-auto">';
+        events.forEach(ev => {
+          dotsHtml += `<span class="h-1.5 flex-1 rounded-full ${isExamDay ? 'bg-white' : ev.color}" title="${ev.title}"></span>`;
+        });
+        dotsHtml += '</div>';
+
+        cell.innerHTML = topHtml + midHtml + dotsHtml;
+        grid.appendChild(cell);
+      }
+
+      renderDayDetailPanel();
+    }
+
+    function changeMonth(delta) {
+      const next = currentMonthIdx + delta;
+      if (next >= 0 && next < CALENDAR_MONTHS.length) {
+        currentMonthIdx = next;
+        renderCalendar();
+      }
+    }
+
+    function selectMonthIndex(val) {
+      currentMonthIdx = parseInt(val, 10);
+      renderCalendar();
+    }
+
+    function selectCalendarDay(iso) {
+      selectedDateIso = iso;
+      renderCalendar();
+    }
+
+    function getStudiedDays() {
+      try {
+        return JSON.parse(localStorage.getItem('ufu2027_studied_days') || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function toggleDayStudied(iso) {
+      const list = getStudiedDays();
+      const idx = list.indexOf(iso);
+      if (idx >= 0) {
+        list.splice(idx, 1);
+        showToast('Dia desmarcado.');
+      } else {
+        list.push(iso);
+        showToast('Dia marcado como estudado!');
+      }
+      localStorage.setItem('ufu2027_studied_days', JSON.stringify(list));
+      renderCalendar();
+    }
+
+    function renderDayDetailPanel() {
+      const panel = document.getElementById('dayDetailPanel');
+      const [y, m, d] = selectedDateIso.split('-');
+      const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+      const formattedDate = `${parseInt(d, 10)} de ${monthNames[parseInt(m, 10) - 1]} de ${y}`;
+
+      const events = getEditalEventsForDate(selectedDateIso);
+      const plan = getStudyPlanForDate(selectedDateIso);
+      const isStudied = getStudiedDays().includes(selectedDateIso);
+
+      let eventsHtml = '';
+      if (events.length > 0) {
+        eventsHtml = `
+          <div class="space-y-2">
+            <div class="editorial-kicker text-ufu-teal">EVENTOS DO EDITAL NESTA DATA</div>
+            ${events.map(ev => `
+              <div class="p-3 rounded-2xl border ${ev.badgeClass}">
+                <div class="text-xs font-bold">${ev.title}</div>
+                <div class="text-[11px] opacity-85 mt-0.5">${ev.desc}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        eventsHtml = `
+          <div class="p-3 rounded-2xl bg-ufu-beige/70 border border-ufu-skyblue/50 text-xs text-ufu-slate">
+            Nenhum prazo administrativo do edital nesta data. Foco total nos estudos!
+          </div>
+        `;
+      }
+
+      let planHtml = '';
+      if (plan) {
+        planHtml = `
+          <div class="space-y-2.5 pt-2">
+            <div class="flex items-center justify-between">
+              <span class="editorial-kicker text-ufu-navy">RECOMENDAÇÃO DE ESTUDO</span>
+              <span class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-ufu-skyblue/50 text-ufu-navy">${plan.phase}</span>
+            </div>
+            <div class="space-y-2">
+              ${plan.items.map(item => `
+                <div class="p-3.5 rounded-2xl bg-ufu-beige border border-ufu-skyblue/70 flex items-start gap-2.5">
+                  <i class="ph-fill ph-book-bookmark text-ufu-teal text-lg shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm font-semibold text-ufu-navy leading-snug">${item}</span>
+                </div>
+              `).join('')}
+            </div>
+
+            <button onclick="toggleDayStudied('${selectedDateIso}')" class="w-full mt-3 py-3 px-4 rounded-2xl font-bold text-xs uppercase tracking-wider transition cursor-pointer flex items-center justify-center gap-2 ${
+              isStudied
+                ? 'bg-ufu-sage text-white shadow-xs'
+                : 'bg-ufu-navy hover:bg-ufu-teal text-white shadow-xs'
+            }">
+              <i class="ph ${isStudied ? 'ph-check-circle' : 'ph-circle'} text-lg"></i>
+              ${isStudied ? 'Dia Concluído com Sucesso' : 'Marcar Dia como Estudado'}
+            </button>
+          </div>
+        `;
+      } else {
+        planHtml = `
+          <div class="p-4 rounded-2xl bg-ufu-beige/60 text-xs text-ufu-slate">
+            Data fora do ciclo ativo de preparação (24/11/2026 a 04/04/2027).
+          </div>
+        `;
+      }
+
+      panel.innerHTML = `
+        <div class="border-b border-ufu-skyblue/60 pb-3.5">
+          <span class="editorial-kicker text-ufu-teal">AGENDA SELECIONADA</span>
+          <h4 class="editorial-title text-2xl font-bold text-ufu-navy mt-0.5">${formattedDate}</h4>
+        </div>
+        ${eventsHtml}
+        ${planHtml}
+      `;
+    }
+
+    // =========================================================================
+    // 3. DADOS DA ABA REDAÇÃO (6 GÊNEROS DO EDITAL + CRITÉRIOS OFICIAIS)
+    // =========================================================================
+    const REDACAO_GENEROS = [
+      {
+        id: 'solicitacao',
+        num: 'I',
+        title: 'Carta de solicitação',
+        summary: 'Texto epistolar argumentativo em que o remetente dirige-se a uma autoridade, instituição ou responsável para requerer providências, recursos, melhorias ou autorização diante de uma demanda legítima.',
+        manual: [
+          'Cabeçalho: Local e data (ex: Uberlândia, 04 de abril de 2027) — atenção para não criar nomes reais que identifiquem você.',
+          'Vocativo formal adequado ao destinatário indicado na proposta (ex: "Prezado(a) Senhor(a) Secretário(a)...").',
+          'Introdução: Apresente-se conforme o papel social pedido no comando e explicite claramente o pedido logo no 1º parágrafo.',
+          'Desenvolvimento: Apresente argumentos consistentes (dados dos textos motivadores, impacto social, viabilidade) justificando por que a solicitação deve ser atendida.',
+          'Conclusão e Despedida: Reafirme o pedido com cordialidade, coloque-se à disposição, use despedida formal ("Atenciosamente,") e assine APENAS com o papel social indicado na proposta (nunca use seu nome próprio!).'
+        ],
+        videoTitle: 'Aula: Como fazer Carta de Solicitação para Vestibular UFU',
+        videoUrl: 'https://www.youtube.com/results?search_query=como+fazer+carta+de+solicitacao+redacao+ufu'
+      },
+      {
+        id: 'reclamacao',
+        num: 'II',
+        title: 'Carta de reclamação',
+        summary: 'Gênero utilizado para manifestar insatisfação fundamentada sobre um serviço prestado, produto, decisão pública ou problema coletivo, exigindo reparação, solução ou esclarecimento do destinatário.',
+        manual: [
+          'Local e data + Vocativo formal direcionado ao responsável pelo órgão, empresa ou instituição.',
+          'Introdução: Contextualize o problema ocorrido de modo objetivo (o quê, quando e onde aconteceu) e deixe claro o motivo da reclamação.',
+          'Desenvolvimento: Detalhe os prejuízos causados, dialogue com os textos motivadores e cobre direitos ou compromissos descumpridos com firmeza e polidez.',
+          'Conclusão: Exija uma providência concreta e um prazo/retorno para a resolução do problema.',
+          'Despedida formal ("Sem mais para o momento," ou "Atenciosamente,") seguida estritamente pela identificação genérica pedida no edital/proposta.'
+        ],
+        videoTitle: 'Aula: Carta de Reclamação na Redação da UFU (Estrutura e Dicas)',
+        videoUrl: 'https://www.youtube.com/results?search_query=carta+de+reclamacao+redacao+ufu'
+      },
+      {
+        id: 'aberta',
+        num: 'III',
+        title: 'Carta aberta',
+        summary: 'Texto de caráter público e coletivo endereçado a autoridades ou à sociedade em geral, divulgado em meios de comunicação para alertar, reivindicar direitos, denunciar problemas ou mobilizar a opinião pública.',
+        manual: [
+          'Título obrigatório e impactante (ex: "CARTA ABERTA À COMUNIDADE ESCOLAR E ÀS AUTORIDADES MUNICIPAIS").',
+          'Vocativo coletivo ou institucional dirigido aos interlocutores principais.',
+          'Introdução: Apresente o tema de interesse público e o posicionamento do grupo/emissor representado.',
+          'Desenvolvimento: Articule argumentos persuasivos (em 1ª pessoa do plural "nós" ou 3ª pessoa), dialogando com os textos motivadores e repertório sociocultural.',
+          'Conclusão: Faça um apelo final ou convocação à ação/conscientização e encerre com assinatura coletiva indicada na proposta (ex: "Estudantes do Ensino Médio", sem nomes individuais).'
+        ],
+        videoTitle: 'Aula: Carta Aberta para Vestibular UFU — Passo a Passo',
+        videoUrl: 'https://www.youtube.com/results?search_query=carta+aberta+redacao+ufu+como+fazer'
+      },
+      {
+        id: 'artigo',
+        num: 'IV',
+        title: 'Artigo de opinião',
+        summary: 'Gênero jornalístico-argumentativo em que o autor analisa uma questão polêmica da atualidade, defende um ponto de vista explícito (tese) e busca convencer o leitor por meio de argumentos sólidos.',
+        manual: [
+          'Título criativo e pertinente ao recorte temático (evite títulos genéricos ou apenas copiar o tema).',
+          'Introdução: Contextualize o tema polêmico e apresente sua tese de forma clara e incisiva.',
+          'Desenvolvimento (2 parágrafos): Desenvolva argumentos distintos (causa/consequência, dados, exemplos históricos ou filosóficos), refutando contra-argumentos se necessário.',
+          'Conclusão: Retome a tese sintetizando a reflexão crítica e aponte caminhos ou perspectivas para o debate (sem necessidade de proposta de intervenção engessada estilo ENEM).',
+          'Atenção: Não assine o artigo ao final, pois o Edital UFU proíbe qualquer assinatura ou pseudônimo que identifique o candidato.'
+        ],
+        videoTitle: 'Aula: Artigo de Opinião na UFU (Diferenças para o ENEM e Estrutura)',
+        videoUrl: 'https://www.youtube.com/results?search_query=artigo+de+opiniao+redacao+ufu'
+      },
+      {
+        id: 'resenha',
+        num: 'V',
+        title: 'Resenha crítica',
+        summary: 'Texto que combina a síntese descritiva de um objeto cultural (livro, filme, peça, exposição, álbum ou obra indicada na proposta) com uma análise avaliativa fundamentada em critérios estéticos, sociais ou temáticos.',
+        manual: [
+          'Título atrativo que antecipe o olhar crítico sobre a obra analisada.',
+          'Introdução: Apresente a obra (título, autor/diretor, ano, contexto) e já indique sua tese avaliativa (o valor, relevância ou limitação da obra).',
+ 
